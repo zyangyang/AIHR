@@ -1,0 +1,68 @@
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+*.egg
+dist/
+build/
+*.whl
+
+# Python virtual environments
+.venv/
+venv/
+ENV/
+
+# Node.js
+node_modules/
+dist/
+build/
+*.local
+
+# Environment files
+.env
+.env.local
+.env.*.local
+.env.*.sample
+
+# Backend data files
+*.db
+*.sqlite
+*.sqlite3
+uploads/
+downloads/
+chroma_db/
+*.rdb
+
+# Uploaded resume files (may contain PII)
+backend/uploads/
+backend/downloads/
+
+# Frontend build artifacts
+frontend/dist/
+frontend/node_modules/
+
+# IDE
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# Test artifacts
+coverage/
+.coverage
+.pytest_cache/
