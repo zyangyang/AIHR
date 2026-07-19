@@ -2,6 +2,7 @@
 面试题API
 """
 import os
+import re
 import threading
 import uuid
 import json
@@ -17,6 +18,11 @@ from app.core.celery_app import is_celery_available
 from app.models import Resume, Prompt, LLMConfig, InterviewQuestion
 
 router = APIRouter(prefix="/interviews", tags=["面试题"])
+
+
+def _sanitize_filename(name: str) -> str:
+    """清理文件名中的非法字符（/ \\ : * ? " < > |），替换为 -"""
+    return re.sub(r'[/\\:*?"<>|]', '-', name).strip()
 
 
 def _get_interview_task():
@@ -196,9 +202,10 @@ def download_interview_pdf(resume_id: int, current_user: dict = Depends(get_curr
             bold_font_name = font_name
 
     # 文件命名规则：应聘岗位-简历姓名-手机号-面试题
-    base_name = f"{resume.job.title}-{resume.name}-{resume.phone}-面试题"
+    base_name = _sanitize_filename(f"{resume.job.title}-{resume.name}-{resume.phone}-面试题")
     filename = f"{base_name}.pdf"
-    output_dir = Path("downloads")
+    # 使用项目根目录下的绝对路径，避免因工作目录变化导致路径错误
+    output_dir = Path(__file__).resolve().parent.parent.parent / "downloads"
     output_dir.mkdir(exist_ok=True)
     output_path = output_dir / filename
 
@@ -289,9 +296,10 @@ def download_interview_docx(resume_id: int, current_user: dict = Depends(get_cur
         raise HTTPException(status_code=400, detail="面试题尚未生成")
 
     # 文件命名规则：应聘岗位-简历姓名-手机号-面试题
-    base_name = f"{resume.job.title}-{resume.name}-{resume.phone}-面试题"
+    base_name = _sanitize_filename(f"{resume.job.title}-{resume.name}-{resume.phone}-面试题")
     filename = f"{base_name}.docx"
-    output_dir = Path("downloads")
+    # 使用项目根目录下的绝对路径，避免因工作目录变化导致路径错误
+    output_dir = Path(__file__).resolve().parent.parent.parent / "downloads"
     output_dir.mkdir(exist_ok=True)
     output_path = output_dir / filename
 

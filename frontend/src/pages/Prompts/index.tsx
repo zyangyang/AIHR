@@ -25,7 +25,7 @@ const Prompts: React.FC = () => {
     try {
       const res = await getPromptsApi();
       setPrompts(res.data.data || []);
-    } catch {
+    } catch (error) {
       console.error('加载提示词数据失败:', error);
       setPrompts([]);
     } finally {

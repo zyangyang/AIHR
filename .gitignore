@@ -66,3 +66,16 @@ frontend/node_modules/
 coverage/
 .coverage
 .pytest_cache/
+
+# Secrets & keys
+*.pem
+*.key
+
+# WorkBuddy internal
+.workbuddy/
+
+# Deployment temp
+.deploy_tmp/
+
+# Test output files
+面试题下载测试.pdf

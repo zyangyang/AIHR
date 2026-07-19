@@ -302,7 +302,7 @@ const ResumeDetail: React.FC = () => {
   };
 
   if (loading) return <Spin size="large" style={{ display: 'block', margin: '40px auto' }} />;
-  if (!resume) return <Alert status="error" message="简历不存在" />;
+  if (!resume) return <Alert type="error" message="简历不存在" />;
 
   const latestScore = resume.scores?.[resume.scores.length - 1];
 

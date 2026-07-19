@@ -2,6 +2,7 @@
 匹配处理API
 """
 import os
+import re
 import threading
 import uuid
 import json
@@ -49,10 +50,11 @@ def trigger_parse(
 
     if task:
         try:
+            resume.parse_status = "parsing"
+            db.commit()
             celery_task = task.delay(resume_id, prompt_id, llm_config_id)
             return ApiResponse(message="识别任务已提交", data={"task_id": celery_task.id})
         except Exception:
-            # Celery 不可用，回退到同步执行
             pass
 
     # 同步回退：在后台线程执行，避免阻塞 HTTP 响应
@@ -260,9 +262,11 @@ def download_score_pdf(resume_id: int, current_user: dict = Depends(get_current_
 
         # 文件命名规则：应聘岗位-简历姓名-手机号-初筛报告
         job_title = resume.job.title if resume.job else '未知岗位'
-        base_name = f"{job_title}-{resume.name}-{resume.phone}-初筛报告"
+        safe_job_title = re.sub(r'[\\/:*?"<>|]', '-', job_title).strip('-')
+        base_name = f"{safe_job_title}-{resume.name}-{resume.phone}-初筛报告"
         filename = f"{base_name}.pdf"
-        output_dir = Path("downloads")
+        # 使用项目根目录下的绝对路径，避免因工作目录变化导致路径错误
+        output_dir = Path(__file__).resolve().parent.parent.parent / "downloads"
         output_dir.mkdir(exist_ok=True)
         output_path = output_dir / filename
 
